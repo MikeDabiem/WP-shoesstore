@@ -6,40 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceMax = document.querySelector('.pricing__max');
 
     function rangeWidth() {
-        rangeMin.style.width = `calc(${(rangeMax.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100}% + ${12 - (12 / 50 * ((rangeMax.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100))}px`;
+        rangeMin.style.width = `calc(${(rangeMax.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100}% + ${12 - (12 / 50 * ((rangeMax.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100))}px)`;
         rangeMax.style.width = `calc(${100 - (rangeMin.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100}% - ${12 - (12 / 50 * ((rangeMin.value - rangeMin.min) / (rangeMax.max - rangeMin.min) * 100))}px)`;
     }
     rangeWidth();
     rangeMin.max = rangeMax.value;
     rangeMax.min = rangeMin.value;
-
-    pricingFilter.addEventListener('change', (e) => {
-        if (priceMin.value === '$') {
-            priceMin.value = '$' + 0;
-        }
-        if (priceMax.value === '$') {
-            priceMax.value = '$' + 0;
-        }
-
-        if (e.target) {
-            if (e.target.classList.contains('pricing__min')) {
-                if (priceMin.value > priceMax.value) {
-                    priceMin.value = '$' + (priceMax.value.slice(1) - 1);
-                }
-                rangeMin.value = priceMin.value.slice(1);
-                rangeMax.min = rangeMin.value;
-                rangeWidth();
-            }
-            if (e.target.classList.contains('pricing__max')) {
-                if (priceMax.value < priceMin.value) {
-                    priceMax.value = '$' + (Number(priceMin.value.slice(1)) + 1);
-                }
-                rangeMax.value = priceMax.value.slice(1);
-                rangeMin.max = rangeMax.value;
-                rangeWidth();
-            }
-        }
-    });
 
     pricingFilter.addEventListener('input', (e) => {
         if (e.target) {
@@ -70,21 +42,39 @@ document.addEventListener('DOMContentLoaded', () => {
         rangeWidth();
     });
 
+    const choosed = document.querySelector('.choosed__items');
+    const choosedArr = [];
+    const choosedTitle = document.querySelector('.filter__choosed-title');
     const checkbox = document.querySelectorAll('.checkbox');
-    checkbox.forEach(item => {
-        item.addEventListener('change', () => {
-            if (item.checked) {
-                item.previousElementSibling.classList.add('checked');
-                item.classList.add('checked');
-            } else {
-                item.previousElementSibling.classList.remove('checked');
-                item.classList.remove('checked');
+    checkbox.forEach(chbox => {
+        chbox.addEventListener('change', () => {
+            if (chbox.checked) {
+                chbox.previousElementSibling.classList.add('checked');
+                chbox.classList.add('checked');
+                choosedArr.push({name: chbox.previousElementSibling.innerHTML, id: chbox.id});
+                choosed.insertAdjacentHTML('beforeend',
+                    `<div class="choosed__item">
+                        <span class="choosed__item-text">${choosedArr[choosedArr.length - 1].name}</span>
+                        <label for="${choosedArr[choosedArr.length - 1].id}" class="choosed__item-x"><img src="wp-content/themes/shoesstore/assets/svg/close.svg" alt="close"></label>
+                    </div>`
+                );
+            } else if (chbox.classList.contains('checked')) {
+                    choosed.childNodes[choosedArr.findIndex(el => el.name === chbox.previousElementSibling.innerHTML)].remove();
+                    chbox.previousElementSibling.classList.remove('checked');
+                    chbox.classList.remove('checked');
+                    choosedArr.splice(choosedArr.findIndex(el => el.name === chbox.previousElementSibling.innerHTML), 1);
+            }
+            if (choosedArr.length > 0 && !choosedTitle.classList.contains('active')) {
+                choosedTitle.classList.add('active');
+            } else if (choosedArr.length === 0 && choosedTitle.classList.contains('active')) {
+                choosedTitle.classList.remove('active');
             }
         });
     });
 
     const sizeSection = document.querySelector('.catalog__filter-size');
     const sizeStdBtn = document.querySelectorAll('.size__standart-btn');
+    sizeStdBtn[0].classList.add('selected');
     sizeSection.addEventListener('click', (e) => {
         if (e.target && e.target.classList.contains('size__standart-btn')) {
             sizeStdBtn.forEach(item => {
@@ -165,5 +155,40 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             e.target.classList.add('selected');
         }
+    });
+
+    const clearBtn = document.querySelector('.filter__clear-btn');
+    const filterForm = document.querySelector('.catalog__filter');
+    const sizeOptions = document.querySelectorAll('.size__option');
+    function selectedRemover(item) {
+        if (item.classList.contains('selected')) {
+            item.classList.remove('selected');
+        }
+    }
+    clearBtn.addEventListener('click', e => {
+        e.preventDefault();
+
+        filterForm.reset();
+
+        rangeWidth();
+        rangeMin.max = rangeMax.value;
+        rangeMax.min = rangeMin.value;
+
+        checkbox.forEach(chbox => {
+            chbox.dispatchEvent(new Event('change'));
+        });
+
+        sizeStdBtn.forEach(item => {
+            selectedRemover(item);
+        });
+        sizeStdBtn[0].classList.add('selected');
+
+        sizeOptions.forEach(item => {
+            selectedRemover(item);
+        });
+
+        labelsOption.forEach(item => {
+            selectedRemover(item);
+        });
     });
 });
