@@ -99,35 +99,35 @@ function shoes_filter() {
     }
 
     $query = new WP_Query(array_merge($args, $filter_args));
-    // $response = [
-    //     'shoes' => [],
-    //     'peculiarities' => [],
-    //     'gender' => []
-    // ];
+    $response = [
+        'shoes' => [],
+        'peculiarities' => [],
+        'gender' => []
+    ];
 
-    // if ( $query->have_posts() ) {
-    //     while ( $query->have_posts() ) {
-    //         $query->the_post();
-    //         $price = get_field('price');
-    //         if ($price >= $_POST['price_min'] && $price <= $_POST['price_max']) {
-    //             // get_template_part("components/single-card");
-    //             $id = get_the_ID();
-    //             $thumb = get_the_post_thumbnail();
-    //             $title = get_the_title();
-    //             $price = number_format(get_field('price'), 2, '.', ' ');
-    //             array_push($response['shoes'], ['id' => $id, 'thumbnail' => $thumb, 'title' => $title, 'price' => $price]);
-    //             // $peculiarities = get_terms(['taxonomy' => 'peculiarities', 'orderby' => 'none']);
-    //             $peculiarities = get_the_terms($post_id, 'peculiarities');
-    //             array_push($response['peculiarities'], [$peculiarities]);
-    //             $gender = get_the_terms($post_id, 'gender');
-    //             in_array($gender, $response['gender']) ? null : array_push($response['gender'], $gender);
-    //         }
-    //     }
-    // }
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $price = get_field('price');
+            if ($price >= $_POST['price_min'] && $price <= $_POST['price_max']) {
+                // get_template_part("components/single-card");
+                $id = get_the_ID();
+                $thumb = get_the_post_thumbnail();
+                $title = get_the_title();
+                $price = number_format(get_field('price'), 2, '.', ' ');
+                array_push($response['shoes'], ['id' => $id, 'thumbnail' => $thumb, 'title' => $title, 'price' => $price]);
+                // $peculiarities = get_terms(['taxonomy' => 'peculiarities', 'orderby' => 'none']);
+                $peculiarities = get_the_terms($post_id, 'peculiarities');
+                array_push($response['peculiarities'], [$peculiarities]);
+                $gender = get_the_terms($post_id, 'gender');
+                in_array($gender, $response['gender']) ? null : array_push($response['gender'], $gender);
+            }
+        }
+    }
 
-    // echo json_encode($response);
+    echo json_encode($response);
 
-    require('components/sidebar.php'); ?>
+    /* require('components/sidebar.php'); ?>
         <div class="catalog__showcase">
             <div class="sort-wrapper">
                 <button class="sort__filter-btn"><img src="<?php bloginfo('template_url'); ?>/assets/svg/filter-logo.svg" alt="filter">Filter</button>
@@ -160,7 +160,7 @@ function shoes_filter() {
                 <button class="pagination__item">16</button>
             </div>
         </div>
-    <?php
+    <?php */
 
     wp_reset_postdata();
 
