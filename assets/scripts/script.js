@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', main_js);
+function main_js() {
     const pricingFilter = document.querySelector('.catalog__filter-pricing');
     const rangeMin = document.querySelector('#pricing__range-min');
     const rangeMax = document.querySelector('#pricing__range-max');
@@ -19,22 +20,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.target.value = '$';
             }
             if (e.target === rangeMin) {
-                priceMin.value = '$' + rangeMin.value;
+                priceMin.value = '$' + Number(rangeMin.value).toFixed(2);
                 priceMin.focus();
                 rangeMax.min = rangeMin.value;
-                priceMax.value = '$' + rangeMax.value;
+                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
                 if (rangeMin.value === rangeMax.value) {
                     rangeMax.value = Number(rangeMax.value) + 1;
                     rangeMin.max = rangeMax.value;
                 }
             }
             if (e.target === rangeMax) {
-                priceMax.value = '$' + rangeMax.value;
+                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
                 priceMax.focus();
                 rangeMin.max = rangeMax.value;
                 if (rangeMax.value === rangeMin.value) {
                     rangeMin.value -= 1;
-                    priceMin.value = '$' + rangeMin.value;
+                    priceMin.value = '$' + Number(rangeMin.value).toFixed(2);
                     rangeMax.min = rangeMin.value;
                 }
             }
@@ -42,12 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         rangeWidth();
     });
 
+    if (priceMin.value === priceMax.value) {
+        pricingFilter.dispatchEvent(new Event('input'));
+    }
+
     const choosed = document.querySelector('.choosed__items');
     const choosedArr = [];
     const choosedTitle = document.querySelector('.filter__choosed-title');
     const checkbox = document.querySelectorAll('.checkbox');
     checkbox.forEach(chbox => {
-        chbox.addEventListener('change', () => {
+        function chboxHandler() {
             if (chbox.checked) {
                 chbox.previousElementSibling.classList.add('checked');
                 chbox.classList.add('checked');
@@ -69,12 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (choosedArr.length === 0 && choosedTitle.classList.contains('active')) {
                 choosedTitle.classList.remove('active');
             }
-        });
+        }
+        chboxHandler();
+        chbox.addEventListener('change', chboxHandler);
     });
 
     const sizeSection = document.querySelector('.catalog__filter-size');
     const sizeStdBtn = document.querySelectorAll('.size__standart-btn');
+    const sizeOptions = document.querySelectorAll('.size__option');
     sizeStdBtn[0].classList.add('selected');
+    document.querySelectorAll('.size__option input').forEach(item => {
+        if (item.hasAttribute('checked')) {
+            item.parentElement.classList.add('selected');
+        }
+    });
     sizeSection.addEventListener('click', (e) => {
         if (e.target && e.target.classList.contains('size__standart-btn')) {
             sizeStdBtn.forEach(item => {
@@ -159,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const clearBtn = document.querySelector('.filter__clear-btn');
     const filterForm = document.querySelector('.catalog__filter');
-    const sizeOptions = document.querySelectorAll('.size__option');
     function selectedRemover(item) {
         if (item.classList.contains('selected')) {
             item.classList.remove('selected');
@@ -190,5 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         labelsOption.forEach(item => {
             selectedRemover(item);
         });
+
+        filterForm.dispatchEvent(new Event('change'));
     });
-});
+
+    hearts = document.querySelectorAll('.item__buttons-heart');
+    hearts.forEach(item => {
+        if (localStorage.getItem(item.id)) {
+            item.setAttribute('checked', 'checked');
+        }
+        item.addEventListener('change', () => {
+            if (item.checked) {
+                localStorage.setItem(item.id, 1);
+            } else {
+                localStorage.removeItem(item.id);
+            }
+        });
+    });
+};

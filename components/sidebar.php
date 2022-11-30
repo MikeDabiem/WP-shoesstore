@@ -16,11 +16,11 @@
             }
         ?>
         <h4 class="pricing__title">Pricing</h4>
-        <input type="text" class="pricing__min" value="$<?php echo min($price); ?>">
-        <input type="text" class="pricing__max" value="$<?php echo max($price); ?>">
+        <input type="text" class="pricing__min" value="$<?php echo number_format(min($price), 2, '.', ' '); ?>" readonly>
+        <input type="text" class="pricing__max" value="$<?php echo number_format(max($price), 2, '.', ' '); ?>" readonly>
         <div class="pricing__range">
-            <input type="range" min="<?php echo min($price); ?>" value="<?php echo min($price); ?>" max="<?php echo max($price); ?>" id="pricing__range-min">
-            <input type="range" min="<?php echo min($price); ?>" value="<?php echo max($price); ?>" max="<?php echo max($price); ?>" id="pricing__range-max">
+            <input type="range" min="<?php echo floor(min($price)); ?>" value="<?php echo floor(min($price)); ?>" max="<?php echo max($price); ?>" id="pricing__range-min">
+            <input type="range" min="<?php echo min($price); ?>" value="<?php echo ceil(max($price)); ?>" max="<?php echo ceil(max($price)); ?>" id="pricing__range-max">
         </div>
     </section>
     <section class="catalog__filter-gender">
@@ -55,19 +55,17 @@
         <h4 class="color__title">Colors</h4>
         <div class="color__select">
             <?php
-                // $colors = ["red", "white", "grey", "yellow", "orange", "green", "black", "pink", "brown", "blue"];
-                // foreach ($colors as $color) {
-                //     echo "<label id=\"color-$color-label\" class=\"color__option\"><input type=\"checkbox\" id=\"color-$color\" name=\"color-$color\"></label>";
-                // }
-            ?>
-            <?php
+                $colors_arr = [];
                 while ( $query->have_posts() ) {
                     $query->the_post();
                     if(get_field('color')) {
-                        foreach(get_field('color') as $array) {
-                            foreach($array as $key => $value) {
-                                if($value) {
-                                    echo "<label id=\"color-$key-label\" class=\"color__option\"><input type=\"checkbox\" id=\"color-$key\" name=\"color-$key\"></label>";
+                        foreach(get_field('color') as $colors) {
+                            foreach($colors as $color => $value) {
+                                if($value && !in_array($color, $colors_arr)) {
+                                    array_push($colors_arr, $color);
+                                    echo "<label id=\"color-$color-label\" class=\"color__option\">
+                                        <input type=\"checkbox\" id=\"$color\" name=\"$color\">
+                                    </label>";
                                 }
                             }
                         }
@@ -88,8 +86,21 @@
         </div>
         <div class="size__options">
             <?php
-                $sizes = [22, 22.5, 23, 23.5, 24, 24.5, 25, 25.5, 26, 26.5, 27, 27.5, 28, 28.5, 29, 29.5, 30, 30.5];
-                foreach ($sizes as $size) {
+                $sizes_arr = [];
+                while ( $query->have_posts() ) {
+                    $query->the_post();
+                    if(get_field('size')) {
+                        foreach(get_field('size') as $sizes) {
+                            foreach($sizes as $size => $value) {
+                                if($value && !in_array($size, $sizes_arr)) {
+                                    array_push($sizes_arr, $size);
+                                }
+                            }
+                        }
+                    }
+                }
+                sort($sizes_arr);
+                foreach ($sizes_arr as $size) {
                     echo "<label class=\"size__option\"><input type=\"checkbox\" id=\"size-option-$size\" name=\"size-option-$size\">$size</label>";
                 }
             ?>

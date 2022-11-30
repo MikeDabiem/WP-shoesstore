@@ -130,6 +130,7 @@ button.pagination__item:hover,
     .showcase__items {
         gap: 14px;
         margin: 20px auto 0;
+        width: 100%;
     }
 
     .pagination__item {

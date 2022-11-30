@@ -3,7 +3,7 @@ $query = new WP_Query([
     'post_type' => 'shoes',
     'posts_per_page' => 12,
     'order_by' => 'date',
-    'order' => 'asc'
+    'order' => 'asc',
 ]);
 ?>
 <div class="wrapper">
@@ -26,15 +26,9 @@ $query = new WP_Query([
                 <?php
                     while ( $query->have_posts() ) {
                         $query->the_post();
-                        require "components/single-card.php";
+                        get_template_part("components/single-card");
                     }
                     wp_reset_postdata();
-                // $cards = [
-                //     ["name" => "Nike Air Force 1 Medium Blue", "image" => "assets/img/sneaker1.png", "price" => 77.98, "liked" => false],
-                // ];
-                // foreach($cards as $card) {
-                //     require "components/single-card.php";
-                // }
                 ?>
             </div>
             <div class="catalog__pagination">
