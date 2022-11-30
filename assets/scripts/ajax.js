@@ -10,12 +10,13 @@ jQuery(function jq_filter($) {
         }
         $.post(ajaxurl.url, data, function(response) {
             resp_arr = JSON.parse(response);
-            console.log(resp_arr);
+            // console.log(resp_arr);
 
             $('.showcase__items')
                 .empty()
                 .animate({opacity: 1}, 300);
 
+            const all_prices = [];
             resp_arr.shoes.forEach(item => {
                 $('.showcase__items').append(`<div class="showcase__items-item">
                         <a href="#" class="item__thumb">
@@ -29,16 +30,19 @@ jQuery(function jq_filter($) {
                         </div>
                     </div>`
                 );
+                all_prices.push(item.price);
             });
             heartsHandler();
 
             // price min/max
-            
+            console.log(Math.min(...all_prices));
+            console.log(Math.max(...all_prices));
+
             $('.gender__option').css('display', 'none');
             resp_arr.gender.forEach(gender => {
                 $('.gender__option').find(`#${gender.slug}`).parent().removeAttr('style');
             });
-            
+
             $('.peculiarities__option').css('display', 'none');
             resp_arr.peculiarities.forEach(pec => {
                 $('.peculiarities__option').find(`#${pec.slug}`).parent().removeAttr('style');
