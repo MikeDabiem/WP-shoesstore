@@ -9,13 +9,14 @@ jQuery(function jq_filter($) {
             price_max: $('#pricing__range-min').val() === $('#pricing__range-max').val() ? `${+$('#pricing__range-min').val() + 1}` : $('#pricing__range-max').val()
         }
         $.post(ajaxurl.url, data, function(response) {
-            resp_array = JSON.parse(response);
+            resp_arr = JSON.parse(response);
+            console.log(resp_arr);
 
             $('.showcase__items')
                 .empty()
                 .animate({opacity: 1}, 300);
 
-            resp_array.shoes.forEach(item => {
+            resp_arr.shoes.forEach(item => {
                 $('.showcase__items').append(`<div class="showcase__items-item">
                         <a href="#" class="item__thumb">
                             ${item.thumbnail}
@@ -29,14 +30,23 @@ jQuery(function jq_filter($) {
                     </div>`
                 );
             });
-            // $('.catalog')
-            //     .html(response)
-            //     .animate({opacity: 1}, 300);
-            // data.data.split("&").forEach(item => {
-            //     $(`#${item.slice(0, -3)}`).attr('checked', 'checked');
-            // });
-            main_js();
-            // jq_filter($);
+            heartsHandler();
+
+            // price min/max
+            
+            $('.gender__option').css('display', 'none');
+            resp_arr.gender.forEach(gender => {
+                $('.gender__option').find(`#${gender.slug}`).parent().removeAttr('style');
+            });
+            
+            $('.peculiarities__option').css('display', 'none');
+            resp_arr.peculiarities.forEach(pec => {
+                $('.peculiarities__option').find(`#${pec.slug}`).parent().removeAttr('style');
+            });
+
+            // colors
+
+            // sizes
         });
     });
 });

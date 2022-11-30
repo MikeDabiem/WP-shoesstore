@@ -206,6 +206,9 @@ function main_js() {
         filterForm.dispatchEvent(new Event('change'));
     });
 
+    heartsHandler();
+};
+function heartsHandler() {
     hearts = document.querySelectorAll('.item__buttons-heart');
     hearts.forEach(item => {
         if (localStorage.getItem(item.id)) {
@@ -219,4 +222,4 @@ function main_js() {
             }
         });
     });
-};
+}

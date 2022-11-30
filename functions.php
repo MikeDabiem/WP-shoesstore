@@ -110,57 +110,24 @@ function shoes_filter() {
             $query->the_post();
             $price = get_field('price');
             if ($price >= $_POST['price_min'] && $price <= $_POST['price_max']) {
-                // get_template_part("components/single-card");
                 $id = get_the_ID();
                 $thumb = get_the_post_thumbnail();
                 $title = get_the_title();
                 $price = number_format(get_field('price'), 2, '.', ' ');
                 array_push($response['shoes'], ['id' => $id, 'thumbnail' => $thumb, 'title' => $title, 'price' => $price]);
-                // $peculiarities = get_terms(['taxonomy' => 'peculiarities', 'orderby' => 'none']);
                 $peculiarities = get_the_terms($post_id, 'peculiarities');
-                array_push($response['peculiarities'], [$peculiarities]);
+                foreach($peculiarities as $key => $pec) {
+                    in_array($pec, $response['gender']) ? null : array_push($response['peculiarities'], $pec);
+                }
                 $gender = get_the_terms($post_id, 'gender');
-                in_array($gender, $response['gender']) ? null : array_push($response['gender'], $gender);
+                foreach($gender as $key => $gender) {
+                    in_array($gender, $response['gender']) ? null : array_push($response['gender'], $gender);
+                }
             }
         }
     }
 
     echo json_encode($response);
-
-    /* require('components/sidebar.php'); ?>
-        <div class="catalog__showcase">
-            <div class="sort-wrapper">
-                <button class="sort__filter-btn"><img src="<?php bloginfo('template_url'); ?>/assets/svg/filter-logo.svg" alt="filter">Filter</button>
-                <div class="sort">
-                    <div class="sort__select">Sort by</div>
-                    <ul class="sort__list">
-                        <li class="sort__list-item">Price increase</li>
-                        <li class="sort__list-item">Price reduction</li>
-                        <li class="sort__list-item">The most popular</li>
-                        <li class="sort__list-item">Biggest discount</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="showcase__items">
-                <?php
-                    while ( $query->have_posts() ) {
-                        $query->the_post();
-                        $price = get_field('price');
-                        if ($price >= $_POST['price_min'] && $price <= $_POST['price_max']) {
-                            get_template_part("components/single-card");
-                        }
-                    }
-                ?>
-            </div>
-            <div class="catalog__pagination">
-                <button class="pagination__item">1</button>
-                <button class="pagination__item">2</button>
-                <button class="pagination__item selected">3</button>
-                <div class="pagination__item dots">...</div>
-                <button class="pagination__item">16</button>
-            </div>
-        </div>
-    <?php */
 
     wp_reset_postdata();
 
