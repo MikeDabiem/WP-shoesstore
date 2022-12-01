@@ -92,6 +92,14 @@ button.pagination__item:hover,
     user-select: none;
 }
 
+h2.no-prod {
+    width: 100%;
+    text-align: center;
+    margin-top: 25vh;
+    font-size: 26px;
+    color: #ACACAC;
+}
+
 @media screen and (max-width: 610px) {
     .catalog {
         padding-bottom: 30px;
