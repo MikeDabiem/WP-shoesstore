@@ -20,7 +20,7 @@
         <input type="text" class="pricing__max" value="$<?php echo number_format(max($price), 2, '.', ' '); ?>" readonly>
         <div class="pricing__range">
             <input type="range" min="<?php echo floor(min($price)); ?>" value="<?php echo floor(min($price)); ?>" max="<?php echo max($price); ?>" id="pricing__range-min">
-            <input type="range" min="<?php echo min($price); ?>" value="<?php echo ceil(max($price)); ?>" max="<?php echo ceil(max($price)); ?>" id="pricing__range-max">
+            <input type="range" min="<?php echo min($price); ?>" value="<?php echo ceil(max($price)); ?>" max="<?php echo ceil(max($price) + 1); ?>" id="pricing__range-max">
         </div>
     </section>
     <section class="catalog__filter-gender">

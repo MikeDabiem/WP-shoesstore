@@ -208,6 +208,7 @@ function main_js() {
 
     heartsHandler();
 };
+
 function heartsHandler() {
     hearts = document.querySelectorAll('.item__buttons-heart');
     hearts.forEach(item => {

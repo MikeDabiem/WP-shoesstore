@@ -102,26 +102,46 @@ function shoes_filter() {
     $response = [
         'shoes' => [],
         'peculiarities' => [],
-        'gender' => []
+        'gender' => [],
+        'colors' => [],
+        'sizes' => []
     ];
 
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
             $query->the_post();
-            $price = get_field('price');
-            if ($price >= $_POST['price_min'] && $price <= $_POST['price_max']) {
+            $prices = get_field('price');
+            if ($prices >= $_POST['price_min'] && $prices <= $_POST['price_max']) {
                 $id = get_the_ID();
                 $thumb = get_the_post_thumbnail();
                 $title = get_the_title();
                 $price = number_format(get_field('price'), 2, '.', ' ');
                 array_push($response['shoes'], ['id' => $id, 'thumbnail' => $thumb, 'title' => $title, 'price' => $price]);
+
                 $peculiarities = get_the_terms($post_id, 'peculiarities');
                 foreach($peculiarities as $key => $pec) {
-                    in_array($pec, $response['gender']) ? null : array_push($response['peculiarities'], $pec);
+                    in_array($pec, $response['peculiarities']) ? null : array_push($response['peculiarities'], $pec);
                 }
+
                 $gender = get_the_terms($post_id, 'gender');
                 foreach($gender as $key => $gender) {
                     in_array($gender, $response['gender']) ? null : array_push($response['gender'], $gender);
+                }
+
+                foreach (get_field('color') as $all_colors) {
+                    foreach ($all_colors as $color => $value) {
+                        if ($value){
+                            in_array($color, $response['colors']) ? null : array_push($response['colors'], $color);
+                        }
+                    }
+                }
+
+                foreach (get_field('size') as $all_sizes) {
+                    foreach ($all_sizes as $size => $value) {
+                        if ($value){
+                            in_array($size, $response['sizes']) ? null : array_push($response['sizes'], "$size");
+                        }
+                    }
                 }
             }
         }
