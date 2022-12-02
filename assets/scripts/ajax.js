@@ -10,7 +10,6 @@ jQuery(function jq_filter($) {
         }
         $.post(ajaxurl.url, data, function(response) {
             resp_arr = JSON.parse(response);
-            console.log(resp_arr);
 
             $('.showcase__items').empty();
 
