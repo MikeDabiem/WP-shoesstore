@@ -80,7 +80,9 @@ function shoes_filter() {
                 foreach(get_field('color') as $colors) {
                     foreach($colors as $color => $value) {
                         if ($value) {
-                            in_array("$color=on", $post_data_arr) ? array_push($filter_args['meta_query'], ['key' => "color_0_$color", 'value' => true]) : null;
+                            if (in_array("$color=on", $post_data_arr) && !in_array(['key' => "color_0_$color", 'value' => true], $filter_args['meta_query'])) {
+                                array_push($filter_args['meta_query'], ['key' => "color_0_$color", 'value' => true]);
+                            }
                         }
                     }
                 }
@@ -90,7 +92,9 @@ function shoes_filter() {
                 foreach(get_field('size') as $sizes) {
                     foreach($sizes as $size => $value) {
                         if ($value) {
-                            in_array("size-option-$size=on", $post_data_arr) ? array_push($filter_args['meta_query'], ['key' => "size_0_$size", 'value' => true]) : null;
+                            if (in_array("size-option-{$size}=on", $post_data_arr) && !in_array(['key' => "size_0_{$size}", 'value' => true], $filter_args['meta_query'])) {
+                                array_push($filter_args['meta_query'], ['key' => "size_0_{$size}", 'value' => true]);
+                            }
                         }
                     }
                 }

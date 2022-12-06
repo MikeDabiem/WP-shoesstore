@@ -11,7 +11,7 @@ body {
 }
 
 a, button, input, label {
-    cursor: url('../../svg/Cursor.svg'), pointer;
+    cursor: url('../../svg/cursor.svg'), pointer;
 }
 
 h4 {
