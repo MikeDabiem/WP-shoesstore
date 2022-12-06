@@ -113,7 +113,7 @@ function shoes_filter() {
             $prices = get_field('price');
             if ($prices >= $_POST['price_min'] && $prices <= $_POST['price_max']) {
                 $id = get_the_ID();
-                $thumb = get_the_post_thumbnail();
+                $thumb = get_the_post_thumbnail($post, 'medium');
                 $title = get_the_title();
                 $price = number_format(get_field('price'), 2, '.', ' ');
                 array_push($response['shoes'], ['id' => $id, 'thumbnail' => $thumb, 'title' => $title, 'price' => $price]);

@@ -20,24 +20,33 @@ function main_js() {
                 e.target.value = '$';
             }
             if (e.target === rangeMin) {
-                priceMin.value = '$' + Number(rangeMin.value).toFixed(2);
-                priceMin.focus();
                 rangeMax.min = rangeMin.value;
-                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
                 if (rangeMin.value === rangeMax.value) {
                     rangeMax.value = Number(rangeMax.value) + 1;
                     rangeMin.max = rangeMax.value;
+                    if (rangeMin.value === rangeMax.max) {
+                        rangeMin.value = Number(rangeMax.max) - 1;
+                        rangeMin.max = Number(rangeMax.max) - 1;
+                    }
                 }
+                priceMin.value = '$' + Number(rangeMin.value).toFixed(2);
+                priceMin.focus();
+                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
             }
             if (e.target === rangeMax) {
-                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
-                priceMax.focus();
                 rangeMin.max = rangeMax.value;
                 if (rangeMax.value === rangeMin.value) {
                     rangeMin.value -= 1;
                     priceMin.value = '$' + Number(rangeMin.value).toFixed(2);
-                    rangeMax.min = rangeMin.value;
+                    if (rangeMax.value === rangeMin.min) {
+                        rangeMax.value = Number(rangeMin.min) + 1;
+                        rangeMax.min = Number(rangeMin.min) + 1;
+                    } else {
+                        rangeMax.min = rangeMin.value;
+                    }
                 }
+                priceMax.focus();
+                priceMax.value = '$' + Number(rangeMax.value).toFixed(2);
             }
         }
         rangeWidth();

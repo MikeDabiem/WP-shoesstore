@@ -1,5 +1,4 @@
 .showcase__items-item {
-    /* flex прижимает ценник и кнопки к низу, чтобы карточка соответствовала макету независимо от высоты названия товара */
     display: flex;
     flex-direction: column;
     width: calc((100% - 54px) / 4);
